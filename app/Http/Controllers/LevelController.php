@@ -3,34 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Student;
+use App\Level;
 
-class StudentController extends Controller
+class LevelController extends Controller
 {
     public function index(){
-        $students = Student::select('id','std_name','level_id')->get();
-        return view('Student.index')->with('student',$students);
+        $levels = Level::select('id','lvl_name','is_active')->get();
+        return view('Level.index')->with('level',$levels);
      }
 
     public function create(Request $request){
         $data = $request->except('submit');
   
         $validator = \Validator::make($request->all(), [
-           'std_name' => 'required|string|',
-           'std_father_name' => 'required|string|',
-           'level_id    ' => 'required|number',
+           'lvl_name' => 'required|string|'           
         ]);
   
         if ($validator->fails()) {
            return redirect()->Back()->withInput()->withErrors($validator);
         }
         
-        if($record = Student::firstOrCreate($data)){
+        if($record = Level::firstOrCreate($data)){
             Session::flash('message', 'Saved Successfully!');
             Session::flash('alert-class', 'alert-success');
-            return redirect()->route('student');
+            return redirect()->route('level');
          }else{
-            Session::flash('message', 'Student not saved!');
+            Session::flash('message', 'Level not saved!');
             Session::flash('alert-class', 'alert-danger');
          }
   
@@ -41,23 +39,21 @@ class StudentController extends Controller
         $data = $request->except('submit');
   
         $validator = Validator::make($request->all(), [
-            'std_name' => 'required|string|',
-            'std_father_name' => 'required|string|',
-            'level_id    ' => 'required|number',
+            'lvl_name' => 'required|string|'
         ]);
   
         if ($validator->fails()) {
            return redirect()->Back()->withInput()->withErrors($validator);
         }
-        $subject = Student::find($id);
+        $subject = Level::find($id);
   
         if($subject->update($data)){
   
-           Session::flash('message', 'Student successfully!');
+           Session::flash('message', 'Level successfully!');
            Session::flash('alert-class', 'alert-success');
-           return redirect()->route('student');
+           return redirect()->route('level');
         }else{
-           Session::flash('message', 'Student not updated!');
+           Session::flash('message', 'Level not updated!');
            Session::flash('alert-class', 'alert-danger');
         }
   
